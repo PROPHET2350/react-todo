@@ -1,24 +1,21 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import CardHeader from '@material-ui/core/CardHeader';
 import {
+  Button,
   Card,
   CardContent,
+  CardHeader,
+  Container,
   Divider,
+  Grid,
   IconButton,
   InputAdornment,
   TextField,
-  Button,
   makeStyles
 } from '@material-ui/core';
 import { AccountCircle, Visibility, VisibilityOff } from '@material-ui/icons';
-import { login, logout } from '../Storage/Action/UserLogin';
+import React, { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import ErrorAlert from '../components/Flash/ErrorAlert';
 import Load from '../components/Load';
-import { Link, useHistory, useLocation } from 'react-router-dom';
-
 const useStyles = makeStyles(theme => ({
   card: {
     border: '1px solid black',
@@ -31,20 +28,22 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Login = () => {
+function CreateAccount() {
+  const [FormData, setFormData] = useState({
+    username: '',
+    password: ''
+  });
   const [values, setValues] = useState({
     password: '',
     showPassword: false
   });
+  const [AlertData, setAlertData] = useState({
+    open: false,
+    message: '',
+    AlertType: ''
+  });
   const [LoadState, setLoadState] = useState(false);
   const location = useHistory();
-  const from = useLocation();
-  const [AlertData, setAlertData] = useState({
-    open: from.state ? true : false,
-    message: from.state ? 'Cuenta Creada' : '',
-    AlertType: from.state ? 'success' : ''
-  });
-  const dispatch = useDispatch();
   const classes = useStyles();
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword });
@@ -55,31 +54,38 @@ const Login = () => {
       open: false
     });
   };
-
   const handleSubmit = async e => {
     e.preventDefault();
     setLoadState(true);
-    let config = {
-      method: 'POST',
-      cache: 'no-cache',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(FormData)
-    };
-    let data = await (
-      await fetch('http://192.168.100.3:8081/sign-in', config)
-    ).json();
-    if (data.code !== 'error') {
-      localStorage.setItem('user', JSON.stringify(data.code[0]));
-      dispatch(login(data.code[0]));
-      // setTimeout(() => {
-      //   dispatch(logout());
-      //   localStorage.removeItem('user');
-      // }, 30*60*1000);
-      setLoadState(false);
-      location.push('/');
-    } else {
+    try {
+      let config = {
+        method: 'POST',
+        cache: 'no-cache',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(FormData)
+      };
+      let res = await (
+        await fetch('http://192.168.100.3:8081/sign-up', config)
+      ).json();
+      if (res.code === 'success') {
+        setLoadState(false);
+        location.push('/sign-in', 'AccountCreated');
+      } else {
+        setAlertData({
+          open: true,
+          message: 'Datos Erroneos',
+          AlertType: 'error'
+        });
+        setAlertData({
+          open: true,
+          message: 'Usuario creado',
+          AlertType: 'success'
+        });
+        setLoadState(false);
+      }
+    } catch (error) {
       setAlertData({
         open: true,
         message: 'Datos Erroneos',
@@ -88,10 +94,6 @@ const Login = () => {
       setLoadState(false);
     }
   };
-  const [FormData, setFormData] = useState({
-    username: '',
-    password: ''
-  });
   return (
     <div className={classes.root}>
       <Container maxWidth="sm">
@@ -105,10 +107,7 @@ const Login = () => {
           <Grid item lg={10}>
             <form onSubmit={handleSubmit}>
               <Card className={classes.card}>
-                <CardHeader
-                  title="Sign-in"
-                  subheader="Ingrese sus credenciales"
-                />
+                <CardHeader title="Sign-up" subheader="Create your account" />
                 <Divider />
                 <CardContent>
                   <Grid container spacing={4}>
@@ -173,10 +172,12 @@ const Login = () => {
                       </Button>
                     </Grid>
                     <Grid container item xs={12} justify="space-between">
-                      <Link className={classes.link} to={'/sign-up'}>
-                        Create Account
+                      <Link className={classes.link} to={'/sign-in'}>
+                        Go back
                       </Link>
-                      <Link className={classes.link}>Forgot password?</Link>
+                      <Link className={classes.link} to={'/'}>
+                        Go Home
+                      </Link>
                     </Grid>
                   </Grid>
                 </CardContent>
@@ -194,6 +195,6 @@ const Login = () => {
       <Load open={LoadState} />
     </div>
   );
-};
+}
 
-export default Login;
+export default CreateAccount;

@@ -1,4 +1,5 @@
-const initialState = {};
+const userStorage = JSON.parse(localStorage.getItem('user'));
+const initialState = userStorage ? userStorage : {};
 
 const user = (state = initialState, { type, user }) => {
   switch (type) {
