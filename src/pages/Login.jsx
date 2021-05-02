@@ -14,7 +14,7 @@ import {
   makeStyles
 } from '@material-ui/core';
 import { AccountCircle, Visibility, VisibilityOff } from '@material-ui/icons';
-import { login, logout } from '../Storage/Action/UserLogin';
+import { login } from '../Storage/Action/UserLogin';
 import ErrorAlert from '../components/Flash/ErrorAlert';
 import Load from '../components/Load';
 import { Link, useHistory, useLocation } from 'react-router-dom';

@@ -6,6 +6,7 @@ import store from './Storage/Store';
 import Login from './pages/Login';
 import Task from './pages/Task';
 import CreateAccount from './pages/CreateAccount';
+import Team from './pages/Team';
 function App() {
   return (
     <>
@@ -16,6 +17,7 @@ function App() {
             <Route exact path="/sign-in" component={Login} />
             <Route exact path="/sign-up" component={CreateAccount} />
             <Route exact path="/tasks" component={Task} />
+            <Route exact path="/team" component={Team} />
             <Route exact component={Login} />
           </Switch>
         </BrowserRouter>

@@ -229,6 +229,7 @@ function Task() {
     }
 
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [TaskData]);
   return (
     <>

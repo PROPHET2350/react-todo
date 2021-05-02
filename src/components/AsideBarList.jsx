@@ -61,7 +61,7 @@ const AsideBarList = props => {
           </ListItem>
           <Divider />
         </Link>
-        <Link to="/tasks" className={classes.link}>
+        <Link to="/team" className={classes.link}>
           <ListItem
             button
             key={'Team'}

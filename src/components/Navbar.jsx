@@ -14,7 +14,6 @@ import {
   Divider
 } from '@material-ui/core';
 import { logout } from '../Storage/Action/UserLogin';
-import Load from './Load';
 import { useHistory } from 'react-router';
 
 const useStyles = makeStyles(theme => ({
